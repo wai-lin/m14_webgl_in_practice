@@ -35,7 +35,7 @@ export class THREEApp {
   /**
    * Set animation callback function.
    * This function is called on every animation frame.
-   * @type {import("./types").OnAnimateFn}
+   * @type {AppTypes.OnAnimateFn}
    */
   #onAnimate;
 
@@ -96,7 +96,7 @@ export class THREEApp {
   // == PRIVATE METHODS ==
 
   #getContext() {
-    /** @type {THREEApp.AppContext} */
+    /** @type {AppTypes.AppContext} */
     const context = {
       gl: this.#gl,
       canvas: this.#canvas,
@@ -169,7 +169,7 @@ export class THREEApp {
 
   /**
    * Sets up the scene with a callback function.
-   * @param {THREEApp.SetSceneFn} setupScene
+   * @param {AppTypes.SetSceneFn} setupScene
    */
   setScene(setupScene) {
     this.#sceneObjects.clear();
@@ -178,7 +178,7 @@ export class THREEApp {
 
   /**
    * Sets the animation callback function.
-   * @param {THREEApp.OnAnimateFn} animate
+   * @param {AppTypes.OnAnimateFn} animate
    */
   onAnimate(animate) {
     this.#onAnimate = animate;

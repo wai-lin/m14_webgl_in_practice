@@ -1,7 +1,9 @@
 {
   "compilerOptions": {
+    "target": "esnext",
     "baseUrl": ".",
     "allowJs": true,
+    "checkJs": false,
     "paths": {
       "three/addons/controls/*": [
         "node_modules/@types/three/examples/jsm/controls/*"

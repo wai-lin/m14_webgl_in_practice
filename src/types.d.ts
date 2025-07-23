@@ -6,7 +6,7 @@ type PrettyObject<G> = {
 };
 
 declare global {
-  namespace THREEApp {
+  namespace AppTypes {
     export type AppContext = {
       gl: THREE.WebGLRenderer;
       canvas: HTMLCanvasElement;
