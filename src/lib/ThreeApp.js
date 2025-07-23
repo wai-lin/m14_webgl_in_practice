@@ -1,3 +1,4 @@
+import Stats from "stats.js";
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls";
 
@@ -5,6 +6,11 @@ export class THREEApp {
   // CONSTANTS
   #MAX_PIXEL_RATIO = 1.6;
 
+  /**
+   * Stats.js instance for performance monitoring
+   * @type {Stats}
+   */
+  #stats;
   /**
    * Three.js WebGL Renderer
    * @type {THREE.WebGLRenderer}
@@ -57,31 +63,6 @@ export class THREEApp {
     this.#initEvents();
   }
 
-  /**
-   * Run the application.
-   */
-  start() {
-    // ANIMATE
-    this.#animate();
-  }
-
-  /**
-   * Sets up the scene with a callback function.
-   * @param {THREEApp.SetSceneFn} setupScene
-   */
-  setScene(setupScene) {
-    this.#sceneObjects.clear();
-    this.#scene = setupScene(this.#getContext());
-  }
-
-  /**
-   * Sets the animation callback function.
-   * @param {THREEApp.OnAnimateFn} animate
-   */
-  onAnimate(animate) {
-    this.#onAnimate = animate;
-  }
-
   #getContext() {
     /** @type {THREEApp.AppContext} */
     const context = {
@@ -106,6 +87,10 @@ export class THREEApp {
     // Set the size of the renderer to match the window size
     this.#gl.setSize(window.innerWidth, window.innerHeight);
 
+    // STATS
+    this.#stats = new Stats();
+    document.body.appendChild(this.#stats.dom);
+
     // CAMERA
     const aspectRatio = window.innerWidth / window.innerHeight;
     this.#camera = new THREE.PerspectiveCamera(75, aspectRatio, 0.1, 1000);
@@ -129,6 +114,8 @@ export class THREEApp {
   }
 
   #animate() {
+    this.#stats.begin();
+
     this.#gl.render(this.#scene, this.#camera);
 
     if (this.#onAnimate)
@@ -137,6 +124,35 @@ export class THREEApp {
         setScene: this.setScene.bind(this),
       });
 
+    this.#stats.end();
+
     window.requestAnimationFrame(this.#animate.bind(this));
+  }
+
+  // == PUBLIC METHODS ===
+
+  /**
+   * Run the application.
+   */
+  start() {
+    // ANIMATE
+    this.#animate();
+  }
+
+  /**
+   * Sets up the scene with a callback function.
+   * @param {THREEApp.SetSceneFn} setupScene
+   */
+  setScene(setupScene) {
+    this.#sceneObjects.clear();
+    this.#scene = setupScene(this.#getContext());
+  }
+
+  /**
+   * Sets the animation callback function.
+   * @param {THREEApp.OnAnimateFn} animate
+   */
+  onAnimate(animate) {
+    this.#onAnimate = animate;
   }
 }
