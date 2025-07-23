@@ -67,22 +67,23 @@ export class THREEApp {
 
   /**
    * Sets up the scene with a callback function.
-   * @param {import("./types").SetSceneFn} setupScene
+   * @param {THREEApp.SetSceneFn} setupScene
    */
   setScene(setupScene) {
+    this.#sceneObjects.clear();
     this.#scene = setupScene(this.#getContext());
   }
 
   /**
    * Sets the animation callback function.
-   * @param {import("./types").OnAnimateFn} animate
+   * @param {THREEApp.OnAnimateFn} animate
    */
   onAnimate(animate) {
     this.#onAnimate = animate;
   }
 
   #getContext() {
-    /** @type {import('./types').AppContext} */
+    /** @type {THREEApp.AppContext} */
     const context = {
       gl: this.#gl,
       canvas: this.#canvas,
@@ -130,7 +131,11 @@ export class THREEApp {
   #animate() {
     this.#gl.render(this.#scene, this.#camera);
 
-    if (this.#onAnimate) this.#onAnimate(this.#getContext());
+    if (this.#onAnimate)
+      this.#onAnimate({
+        ...this.#getContext(),
+        setScene: this.setScene.bind(this),
+      });
 
     window.requestAnimationFrame(this.#animate.bind(this));
   }
