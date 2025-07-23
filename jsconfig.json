@@ -1,5 +1,12 @@
 {
-   "compilerOptions": {
-      "baseUrl": "."
-   }
+  "compilerOptions": {
+    "baseUrl": ".",
+    "allowJs": true,
+    "paths": {
+      "three/addons/controls/*": [
+        "node_modules/@types/three/examples/jsm/controls/*"
+      ]
+    }
+  },
+  "include": ["src/**/*"]
 }
