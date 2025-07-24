@@ -10,10 +10,10 @@ declare global {
     export type AppContext = {
       gl: THREE.WebGLRenderer;
       canvas: HTMLCanvasElement;
+      clock: THREE.Clock;
       camera: THREE.PerspectiveCamera;
       controls: OrbitControls;
       scene: THREE.Scene;
-      sceneObjects: Map<string, any>;
     };
 
     export type SetSceneArgs = AppContext;
