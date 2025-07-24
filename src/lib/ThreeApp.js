@@ -50,6 +50,21 @@ export class THREEApp {
    * @type {OrbitControls | undefined}
    */
   #controls;
+  /**
+   * Axes Helper for debugging
+   * @type {THREE.AxesHelper | undefined}
+   */
+  #axesHelper;
+  /**
+   * Camera Helper for debugging
+   * @type {THREE.CameraHelper | undefined}
+   */
+  #cameraHelper;
+  /**
+   * Helper camera to visualize with CameraHelper
+   * @type {THREE.PerspectiveCamera | undefined}
+   */
+  #helperCamera;
 
   /**
    * Creates an instance of the ThreeJsApp class.
@@ -68,6 +83,15 @@ export class THREEApp {
 
   // == DEBUGGING TOOLS ==
 
+  /**
+   * Enable or disable debugging tools.
+   *
+   * NOTE: **ORDER MATTERS!!**
+   *
+   * If you set DEBUG to true, it will initialize the debugging tools.
+   *
+   * You need to set DEBUG after the `setScene` and `onAnimate` methods are called.
+   */
   get DEBUG() {
     return this.#DEBUG;
   }
@@ -76,11 +100,7 @@ export class THREEApp {
     if (this.#DEBUG) {
       this.#setDebugers();
     } else {
-      this.#stats?.end();
-      this.#stats = undefined;
-
-      this.#controls?.dispose();
-      this.#controls = undefined;
+      this.#removeDebugers();
     }
   }
 
@@ -91,6 +111,29 @@ export class THREEApp {
 
     // CONTROLS
     this.#controls = new OrbitControls(this.#camera, this.#gl.domElement);
+
+    // AXES HELPER
+    this.#axesHelper = new THREE.AxesHelper(5);
+    this.#scene.add(this.#axesHelper);
+
+    // CAMERA HELPER - Create a separate helper camera to visualize
+    this.#helperCamera = new THREE.PerspectiveCamera();
+    this.#helperCamera.copy(this.#camera);
+
+    this.#cameraHelper = new THREE.CameraHelper(this.#helperCamera);
+    this.#scene.add(this.#cameraHelper);
+  }
+
+  #removeDebugers() {
+    this.#stats?.end();
+    this.#stats = undefined;
+
+    this.#controls?.dispose();
+    this.#controls = undefined;
+
+    if (this.#axesHelper) this.#scene.remove(this.#axesHelper);
+    if (this.#cameraHelper) this.#scene.remove(this.#cameraHelper);
+    this.#helperCamera = undefined;
   }
 
   // == PRIVATE METHODS ==
@@ -121,9 +164,9 @@ export class THREEApp {
 
     // CAMERA
     const aspectRatio = window.innerWidth / window.innerHeight;
-    this.#camera = new THREE.PerspectiveCamera(75, aspectRatio, 0.1, 1000);
-    this.#camera.position.set(0, 0, 5);
-    this.#camera.lookAt(0, 0, 0);
+    this.#camera = new THREE.PerspectiveCamera(75, aspectRatio, 1, 100);
+    this.#camera.position.set(0.5, 0.5, 5);
+    this.#camera.lookAt(0, 0, 0.5);
 
     // ENABLE DEBUGGING TOOLS
     if (this.DEBUG) this.#setDebugers();
