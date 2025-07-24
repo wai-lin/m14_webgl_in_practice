@@ -1,24 +1,32 @@
+import { rangeTimedScale } from "../lib/utils";
 import * as THREE from "three";
 
-/** @type {THREEApp.SetSceneFn} */
+const SCENE_OBJECTS = {
+  cube: new THREE.Mesh(
+    new THREE.BoxGeometry(1, 1, 1),
+    new THREE.MeshBasicMaterial()
+  ),
+};
+
+/** @type {AppTypes.SetSceneFn} */
 export function createCubicScene(ctx) {
   const scene = new THREE.Scene();
+  scene.background = new THREE.Color("#0f172b");
 
-  const geo = new THREE.BoxGeometry(1, 1, 1);
-  const mat = new THREE.MeshBasicMaterial();
-  const mesh = new THREE.Mesh(geo, mat);
-  ctx.sceneObjects.set("cube", mesh);
-  scene.add(ctx.sceneObjects.get("cube"));
-
+  scene.add(SCENE_OBJECTS.cube);
   return scene;
 }
 
-/** @type {THREEApp.OnAnimateFn} */
+/** @type {AppTypes.OnAnimateFn} */
 export function animateCubicScene(ctx) {
-  /** @type {THREE.Mesh} */
-  const cube = ctx.sceneObjects.get("cube");
-  if (cube) {
-    cube.rotation.x += 0.01;
-    cube.rotation.y += 0.01;
-  }
+  const cube = SCENE_OBJECTS.cube;
+
+  // Rotate the cube
+  cube.rotation.x += 0.01;
+  cube.rotation.y += 0.01;
+
+  // Animate scaling between 0.5 and 1.2
+  const ocilTime = Math.sin(ctx.clock.getElapsedTime());
+  const scale = rangeTimedScale(ocilTime, 0.5, 1.2);
+  cube.scale.setScalar(scale);
 }

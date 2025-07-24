@@ -18,6 +18,11 @@ export class THREEApp {
    */
   #canvas;
   /**
+   * Clock for managing time in the application
+   * @type {THREE.Clock}
+   */
+  #clock;
+  /**
    * Perspective Camera
    * @type {THREE.PerspectiveCamera}
    */
@@ -27,11 +32,6 @@ export class THREEApp {
    * @type {THREE.Scene}
    */
   #scene;
-  /**
-   * Objects in the scene.
-   * @type {Map<string, any>}
-   */
-  #sceneObjects = new Map();
   /**
    * Set animation callback function.
    * This function is called on every animation frame.
@@ -143,10 +143,10 @@ export class THREEApp {
     const context = {
       gl: this.#gl,
       canvas: this.#canvas,
+      clock: this.#clock,
       camera: this.#camera,
       controls: this.#controls,
       scene: this.#scene,
-      sceneObjects: this.#sceneObjects,
     };
     return context;
   }
@@ -161,6 +161,9 @@ export class THREEApp {
 
     // Set the size of the renderer to match the window size
     this.#gl.setSize(window.innerWidth, window.innerHeight);
+
+    // CLOCK
+    this.#clock = new THREE.Clock();
 
     // CAMERA
     const aspectRatio = window.innerWidth / window.innerHeight;
@@ -215,7 +218,6 @@ export class THREEApp {
    * @param {AppTypes.SetSceneFn} setupScene
    */
   setScene(setupScene) {
-    this.#sceneObjects.clear();
     this.#scene = setupScene(this.#getContext());
   }
 
