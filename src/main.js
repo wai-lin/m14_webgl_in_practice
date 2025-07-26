@@ -1,13 +1,21 @@
 import "./style.css";
 import { THREEApp } from "./lib/ThreeApp";
-import { animateCubicScene, createCubicScene } from "./scenes/cubic.scene";
+import {
+  createCarKitScene,
+  animateCarKitScene,
+  createCarKitUI,
+} from "./scenes/carkit.scene";
 
-const app = new THREEApp("#webgl-canvas");
+(async () => {
+  const app = new THREEApp("#webgl-canvas");
 
-app.setScene(createCubicScene);
-app.onAnimate(animateCubicScene);
+  await app.setScene(createCarKitScene);
+  app.onAnimate(animateCarKitScene);
 
-app.DEBUG = true; // Enable debug mode for development
-//  ^^^ order matters! Make sure to set this after `setScene` and `onAnimate`
+  app.DEBUG = true; // Enable debug mode for development
+  //  ^^^ order matters! Make sure to set this after `setScene` and `onAnimate`
 
-app.start();
+  app.start();
+
+  createCarKitUI();
+})();
