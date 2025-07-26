@@ -7,3 +7,26 @@ body {
   overflow: hidden;
   font-family: Arial, sans-serif;
 }
+
+kbd {
+  color: white;
+  background-color: #314158;
+  border: 1px solid #62748e;
+  border-bottom: 5px solid #62748e;
+  border-right: 3px solid #62748e;
+  border-radius: 5px;
+  padding: 4px 15px;
+  font-size: 14px;
+}
+
+.alert {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgb(255, 255, 255);
+  color: #45556c;
+  padding: 15px 20px;
+  border-radius: 10px;
+  z-index: 1000;
+}

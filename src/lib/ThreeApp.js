@@ -117,11 +117,10 @@ export class THREEApp {
     this.#scene.add(this.#axesHelper);
 
     // CAMERA HELPER - Create a separate helper camera to visualize
-    this.#helperCamera = new THREE.PerspectiveCamera();
-    this.#helperCamera.copy(this.#camera);
-
-    this.#cameraHelper = new THREE.CameraHelper(this.#helperCamera);
-    this.#scene.add(this.#cameraHelper);
+    // this.#helperCamera = new THREE.PerspectiveCamera();
+    // this.#helperCamera.copy(this.#camera);
+    // this.#cameraHelper = new THREE.CameraHelper(this.#helperCamera);
+    // this.#scene.add(this.#cameraHelper);
   }
 
   #removeDebugers() {
@@ -217,8 +216,8 @@ export class THREEApp {
    * Sets up the scene with a callback function.
    * @param {AppTypes.SetSceneFn} setupScene
    */
-  setScene(setupScene) {
-    this.#scene = setupScene(this.#getContext());
+  async setScene(setupScene) {
+    this.#scene = await setupScene(this.#getContext());
   }
 
   /**

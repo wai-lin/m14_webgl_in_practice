@@ -17,11 +17,20 @@ declare global {
     };
 
     export type SetSceneArgs = AppContext;
-    export type SetSceneFn = (context: SetSceneArgs) => THREE.Scene;
+    export type SetSceneFn = (
+      context: SetSceneArgs
+    ) => THREE.Scene | Promise<THREE.Scene>;
 
     export type OnAnimateArgs = PrettyObject<
       AppContext & { setScene: SetSceneFn }
     >;
     export type OnAnimateFn = (context: OnAnimateArgs) => void;
+
+    export type ResourceType = "gltf" | "texture";
+    export type Resource = {
+      type: ResourceType;
+      name: string;
+      url: string;
+    };
   }
 }
