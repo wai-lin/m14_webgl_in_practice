@@ -129,7 +129,7 @@ export function NewProgram(canvasId) {
     // Cache the lifecycle hooks to
     // avoid recreating the hooks arrays on each frame
     const onAnimates = _modules.map((p) => p.onAnimate);
-    const onAfterAnimates = _modules.map((p) => p.onAfterAnimate);
+    const onAfterAnimates = _modules.map((p) => p.onAfterAnimate).reverse();
 
     const _animate = () => {
       _hooksRunner(onAnimates)(_getContext());
