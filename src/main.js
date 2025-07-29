@@ -1,12 +1,12 @@
 import "./style.css";
 import { NewProgram } from "./lib/Program";
-import { CUBIC_SCENE } from "./scenes/cubic.scene";
 import {
   CameraHelperPlugin,
   DebugToolsPlugin,
   StatsPlugin,
 } from "./lib/Plugins";
 import { EventsManager } from "./lib/Events";
+import { CAR_KIT_SCENE } from "./scenes/carkit.scene";
 
 (async () => {
   const { listenEvents } = EventsManager();
@@ -18,7 +18,7 @@ import { EventsManager } from "./lib/Events";
   pg.use(StatsPlugin, DebugToolsPlugin, CameraHelperPlugin);
 
   // Register scene
-  pg.use(CUBIC_SCENE);
+  pg.use(CAR_KIT_SCENE);
 
   pg.run();
 })();
