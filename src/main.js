@@ -1,21 +1,24 @@
 import "./style.css";
-import { THREEApp } from "./lib/ThreeApp";
+import { NewProgram } from "./lib/Program";
+import { CUBIC_SCENE } from "./scenes/cubic.scene";
 import {
-  createCarKitScene,
-  animateCarKitScene,
-  createCarKitUI,
-} from "./scenes/carkit.scene";
+  CameraHelperPlugin,
+  DebugToolsPlugin,
+  StatsPlugin,
+} from "./lib/Plugins";
+import { EventsManager } from "./lib/Events";
 
 (async () => {
-  const app = new THREEApp("#webgl-canvas");
+  const { listenEvents } = EventsManager();
+  listenEvents();
 
-  await app.setScene(createCarKitScene);
-  app.onAnimate(animateCarKitScene);
+  const pg = NewProgram("#webgl-canvas");
 
-  app.DEBUG = true; // Enable debug mode for development
-  //  ^^^ order matters! Make sure to set this after `setScene` and `onAnimate`
+  // Register plugins
+  pg.use(StatsPlugin, DebugToolsPlugin, CameraHelperPlugin);
 
-  app.start();
+  // Register scene
+  pg.use(CUBIC_SCENE);
 
-  createCarKitUI();
+  pg.run();
 })();

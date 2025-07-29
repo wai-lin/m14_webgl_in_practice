@@ -135,6 +135,6 @@ export function animateCarKitScene(ctx) {
   const deltaTime = ctx.clock.getDelta();
   const rotationSpeed = 0.5;
 
-  car.rotation.y += deltaTime * rotationSpeed; // Rotate the car
+  if (car) car.rotation.y += deltaTime * rotationSpeed; // Rotate the car
   plane.rotation.z += deltaTime * rotationSpeed; // Rotate the plane along with the car
 }

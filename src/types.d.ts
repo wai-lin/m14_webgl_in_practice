@@ -6,31 +6,40 @@ type PrettyObject<G> = {
 };
 
 declare global {
-  namespace AppTypes {
-    export type AppContext = {
-      gl: THREE.WebGLRenderer;
-      canvas: HTMLCanvasElement;
-      clock: THREE.Clock;
-      camera: THREE.PerspectiveCamera;
-      controls: OrbitControls;
+  namespace ProgramTypes {
+    export type Context = {
       scene: THREE.Scene;
+      webgl: THREE.WebGLRenderer;
+      canvasEl: HTMLCanvasElement;
+      clock: THREE.Clock;
+      provide: (name: string, value: any) => void;
+      get: <V = any>(name: string) => V | undefined;
     };
 
-    export type SetSceneArgs = AppContext;
-    export type SetSceneFn = (
-      context: SetSceneArgs
-    ) => THREE.Scene | Promise<THREE.Scene>;
+    export type OnLoadFn = (ctx: Context) => void | Promise<void>;
+    export type OnInitFn = (ctx: Context) => void | Promise<void>;
+    export type OnEventListenerFn = (ctx: Context) => void | Promise<void>;
+    export type OnAnimateFn = (ctx: Context) => void;
+    export type OnAfterAnimateFn = (ctx: Context) => void;
 
-    export type OnAnimateArgs = PrettyObject<
-      AppContext & { setScene: SetSceneFn }
-    >;
-    export type OnAnimateFn = (context: OnAnimateArgs) => void;
+    export type ModuleOptions = {
+      name: string;
+      onLoad?: OnLoadFn;
+      onInit?: OnInitFn;
+      onEventListener?: OnEventListenerFn;
+      onAnimate?: OnAnimateFn;
+      onAfterAnimate?: OnAfterAnimateFn;
+    };
+    export type CreateModuleFn = (config: ModuleOptions) => ModuleOptions;
 
+    // === Resources ===
     export type ResourceType = "gltf" | "texture";
     export type Resource = {
       type: ResourceType;
       name: string;
       url: string;
+      rejectOnFailure?: boolean;
     };
+    export type GetResourceFn = (name: string) => any;
   }
 }
