@@ -1,3 +1,4 @@
+import { ev } from "../lib/Events";
 import { CreateModule } from "../lib/Program";
 import { NewResourceLoader } from "../lib/ResourceLoader";
 import * as THREE from "three";
@@ -121,8 +122,8 @@ export const CAR_KIT_SCENE = CreateModule({
   onEventListener: (ctx) => {
     const scene = ctx.scene;
 
-    document.addEventListener("keydown", (event) => {
-      if (event.code === "Space") {
+    ev.on("onKeyDown", (e) => {
+      if (e.code === "Space") {
         const currentIndex = STATE.cars.indexOf(STATE.currentCar);
         const nextIndex = (currentIndex + 1) % STATE.cars.length;
         const nextCarName = STATE.cars[nextIndex];

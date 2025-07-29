@@ -2,6 +2,7 @@ import * as THREE from "three";
 import Stats from "stats.js";
 import { OrbitControls } from "three/addons/controls/OrbitControls";
 import { CreateModule } from "./Program";
+import { ev } from "./Events";
 
 /** @type {Stats} */
 let stats;
@@ -63,5 +64,23 @@ export const CameraHelperPlugin = CreateModule({
 
     const cameraHelper = new THREE.CameraHelper(helperCamera);
     ctx.scene.add(cameraHelper);
+  },
+});
+
+export const WindowResizePlugin = CreateModule({
+  name: "WindowResizePlugin",
+  onEventListener: (ctx) => {
+    ev.on("onWindowResize", (e) => {
+      // Update the size of the WebGL context
+      ctx.webgl.setSize(window.innerWidth, window.innerHeight);
+
+      // Update the camera aspect ratio and projection matrix
+      const aspect = window.innerWidth / window.innerHeight;
+      const mainCamera = ctx.scene.getObjectByName("MainCamera");
+      if (mainCamera) {
+        mainCamera.aspect = aspect;
+        mainCamera.updateProjectionMatrix();
+      }
+    });
   },
 });

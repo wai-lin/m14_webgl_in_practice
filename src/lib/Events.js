@@ -3,24 +3,20 @@ import mitt from "mitt";
 /**
  * All events that can be emitted by the application.
  * @typedef Events
- * @property {UIEvent} resize - Triggered when the window is resized.
+ * @property {UIEvent} onWindowResize - Triggered when the window is resized.
+ * @property {KeyboardEvent} onKeyDown - Triggered when a key is pressed down.
  */
+
+/**
+ * Event emitter for the application.
+ * @type {import("mitt").Emitter<Events>}
+ */
+export const ev = mitt();
 
 /**
  * EventsManager is responsible for managing application-wide events.
  */
 export function EventsManager() {
-  /** @type {import("mitt").Emitter<Events>} */
-  const emitter = mitt();
-
-  const listenEvents = () => {
-    emitter.on("resize", (e) => {
-      console.log("Window resized:", e);
-    });
-  };
-
-  return {
-    emitter,
-    listenEvents,
-  };
+  addEventListener("resize", (e) => ev.emit("onWindowResize", e));
+  addEventListener("keydown", (e) => ev.emit("onKeyDown", e));
 }
