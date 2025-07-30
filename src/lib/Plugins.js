@@ -22,12 +22,24 @@ export const StatsPlugin = CreateModule({
       stats = new Stats();
       document.body.appendChild(stats.dom);
     }
+
+    subscribe(STORE.debug, (state) => {
+      if (STORE.debug.enabled) {
+        stats = new Stats();
+        if (document.body.contains(stats.dom))
+          document.body.removeChild(stats.dom);
+        document.body.appendChild(stats.dom);
+      } else {
+        document.body.removeChild(stats.dom);
+        stats = null;
+      }
+    });
   },
   onAnimate: (ctx) => {
-    if (STORE.debug.enabled) stats.begin();
+    if (stats) stats.begin();
   },
   onAfterAnimate: (ctx) => {
-    if (STORE.debug.enabled) stats.end();
+    if (stats) stats.end();
   },
 });
 
