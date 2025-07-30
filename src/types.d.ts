@@ -1,3 +1,4 @@
+import { EffectComposer } from "postprocessing";
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls";
 
@@ -9,9 +10,11 @@ declare global {
   namespace ProgramTypes {
     export type Context = {
       scene: THREE.Scene;
+      camera: THREE.PerspectiveCamera | THREE.OrthographicCamera;
       webgl: THREE.WebGLRenderer;
       canvasEl: HTMLCanvasElement;
       clock: THREE.Clock;
+      composer: EffectComposer;
       provide: (name: string, value: any) => void;
       get: <V = any>(name: string) => V | undefined;
     };

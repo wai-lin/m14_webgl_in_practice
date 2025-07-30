@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { CreatePostProcessor } from "./PostProcessing";
 
 const _hooksRunner = (hooks = []) => {
   return (ctx) => {
@@ -34,8 +35,9 @@ export const CreateModule = (config) => {
 /**
  * Creates a new three.js program instance.
  * @param {string} canvasId
+ * @param {"webgl" | "post-processor"} [renderer="webgl"]
  */
-export function NewProgram(canvasId) {
+export function NewProgram(canvasId, renderer = "webgl") {
   const _contextMap = new Map();
   const _modules = [];
 
@@ -54,6 +56,8 @@ export function NewProgram(canvasId) {
   let _canvasEl;
   /** @type {THREE.Clock} */
   let _clock;
+  /** @type {import("postprocessing").EffectComposer} */
+  let _composer;
 
   const _provide = (key, value) => {
     _contextMap.set(key, value);
@@ -63,12 +67,17 @@ export function NewProgram(canvasId) {
     return _contextMap.get(key);
   };
 
+  /**
+   * Get the current context.
+   * @returns {ProgramTypes.Context}
+   */
   const _getContext = () => ({
     scene: _scene,
     camera: _camera,
     webgl: _webgl,
     canvasEl: _canvasEl,
     clock: _clock,
+    composer: _composer,
     provide: _provide,
     get: _get,
   });
@@ -102,6 +111,9 @@ export function NewProgram(canvasId) {
     _camera.lookAt(0, 0, 0);
     _camera.name = "MainCamera";
     _scene.add(_camera);
+
+    // POST PROCESSOR
+    _composer = CreatePostProcessor(_webgl, _scene, _camera);
   };
 
   const use = (...modules) => _modules.push(...modules);
@@ -126,14 +138,20 @@ export function NewProgram(canvasId) {
       _getContext()
     );
 
-    // Cache the lifecycle hooks to
-    // avoid recreating the hooks arrays on each frame
+    /// Cache the lifecycle hooks to
+    /// avoid recreating the hooks arrays on each frame
+
+    // First-In,First-Out
     const onAnimates = _modules.map((p) => p.onAnimate);
+    // First-In,Last-Out
     const onAfterAnimates = _modules.map((p) => p.onAfterAnimate).reverse();
 
     const _animate = () => {
       _hooksRunner(onAnimates)(_getContext());
-      _webgl.render(_scene, _camera);
+
+      if (renderer === "webgl") _webgl.render(_scene, _camera);
+      if (renderer === "post-processor") _composer.render();
+
       _hooksRunner(onAfterAnimates)(_getContext());
       window.requestAnimationFrame(_animate);
     };
