@@ -44,7 +44,11 @@ export function NewResourceLoader() {
       return new Promise((resolve, reject) => {
         const loader = _loaders[r.type];
         if (!loader) {
-          console.error(`No loader found for resource type: ${r.type}`);
+          const error = new Error(`No loader found for resource type: ${r.type}`);
+          console.error(error.message);
+          if (r.rejectOnFailure) reject(error);
+          else resolve(null);
+          return;
         }
 
         loader.load(
@@ -58,16 +62,34 @@ export function NewResourceLoader() {
           (error) => {
             console.error(`Failed to load resource '${r.name}':`, error);
             if (r.rejectOnFailure) reject(error);
+            else resolve(null); // Don't reject, just resolve with null
           }
         );
       });
     });
 
     try {
-      await Promise.all(promises);
-      console.log("All resources loaded successfully");
+      const results = await Promise.allSettled(promises);
+      
+      // Check if any critical resources (rejectOnFailure: true) failed
+      const criticalFailures = results
+        .map((result, index) => ({ result, resource: _resourcesToLoad[index] }))
+        .filter(({ result, resource }) => 
+          result.status === 'rejected' && resource.rejectOnFailure
+        );
+
+      if (criticalFailures.length > 0) {
+        const failedNames = criticalFailures.map(({ resource }) => resource.name);
+        throw new Error(`Critical resources failed to load: ${failedNames.join(', ')}`);
+      }
+
+      const successCount = results.filter(r => r.status === 'fulfilled').length;
+      const failureCount = results.filter(r => r.status === 'rejected').length;
+      
+      console.log(`Resources loaded: ${successCount} successful, ${failureCount} failed`);
     } catch (error) {
       console.error("Error loading resources:", error);
+      throw error; // Re-throw for critical failures
     }
   };
 
