@@ -52,22 +52,24 @@ resourceLoader.queueResources(
 // Scene UI
 // ========================================
 function createCarKitUI() {
-  const alert = document.createElement("div");
-  alert.classList.add("alert");
-  alert.innerHTML = `<p>
-  <strong>Car Kit Scene</strong> - Press <kbd>SPACE</kbd> to change the car model.
-</p>`;
+  const html = `<div
+  role="alert"
+  class="alert alert-info max-w-fit w-full items-end absolute bottom-4 right-4 z-50"
+>
+  <div class="text-left">
+    <h3 class="font-bold">Car Kit Scene</h3>
+    <div class="text-sm">Press <kbd class="kbd text-white">SPACE</kbd> to change the car model.</div>
+  </div>
+  <button id="change-color-theme-btn" class="btn btn-xs">Change Color Theme</button>
+</div>`;
+  document.body.insertAdjacentHTML("beforeend", html);
 
-  const colorThemeBtn = document.createElement("button");
-  alert.appendChild(colorThemeBtn);
-  colorThemeBtn.classList.add("color-theme-btn");
-  colorThemeBtn.innerText = "Color Theme";
-  colorThemeBtn.addEventListener("click", () => {
-    STATE.colorTheme.value =
-      STATE.colorTheme.value === "light" ? "dark" : "light";
-  });
-
-  document.body.appendChild(alert);
+  document
+    .getElementById("change-color-theme-btn")
+    .addEventListener("click", () => {
+      STATE.colorTheme.value =
+        STATE.colorTheme.value === "light" ? "dark" : "light";
+    });
 }
 
 // ========================================

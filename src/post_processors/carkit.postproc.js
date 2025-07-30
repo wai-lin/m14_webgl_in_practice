@@ -5,7 +5,7 @@ export const CAR_KIT_POSTPROC = CreateModule({
   name: "CarKitPostProcessor",
   onInit: (ctx) => {
     const glitchEffect = new GlitchEffect();
-    const pixelationEffect = new PixelationEffect(6);
+    const pixelationEffect = new PixelationEffect(5);
 
     ctx.composer.addPass(new EffectPass(ctx.camera, glitchEffect));
     ctx.composer.addPass(new EffectPass(ctx.camera, pixelationEffect));

@@ -1,3 +1,4 @@
+import tailwindcss from "@tailwindcss/vite";
 import { resolve } from "node:path";
 import { defineConfig } from "vite";
 
@@ -6,6 +7,7 @@ function resolvePath(path: string) {
 }
 
 export default defineConfig({
+  plugins: [tailwindcss()],
   resolve: {
     alias: {
       "@lib": resolvePath("./src/lib"),
