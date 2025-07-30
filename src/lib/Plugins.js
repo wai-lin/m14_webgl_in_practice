@@ -1,8 +1,10 @@
 import Stats from "stats.js";
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls";
+import { subscribe } from "valtio/vanilla";
 import { ev } from "./Events";
 import { CreateModule } from "./Program";
+import { STORE } from "./store";
 
 /** @type {Stats} */
 let stats;
@@ -16,16 +18,17 @@ let stats;
 export const StatsPlugin = CreateModule({
   name: "StatsPlugin",
   onInit: () => {
-    stats = new Stats();
-    document.body.appendChild(stats.dom);
+    if (STORE.debug.enabled) {
+      stats = new Stats();
+      document.body.appendChild(stats.dom);
+    }
   },
   onAnimate: (ctx) => {
-    stats.begin();
+    if (STORE.debug.enabled) stats.begin();
   },
   onAfterAnimate: (ctx) => {
-    stats.end();
+    if (STORE.debug.enabled) stats.end();
   },
-  // TODO: Toggle Stats with Event Listener
 });
 
 /**
@@ -40,15 +43,19 @@ export const DebugToolsPlugin = CreateModule({
   name: "DebugToolsPlugin",
   onInit: (ctx) => {
     const camera = ctx.scene.getObjectByName("MainCamera");
-    ctx.provide(
-      "OrbitControls",
-      new OrbitControls(camera, ctx.webgl.domElement)
-    );
+    const orbitControls = new OrbitControls(camera, ctx.webgl.domElement);
+    orbitControls.enabled = STORE.debug.enabled;
+    ctx.provide("OrbitControls", orbitControls);
 
     const axesHelper = new THREE.AxesHelper(100);
+    axesHelper.visible = STORE.debug.enabled;
     ctx.scene.add(axesHelper);
+
+    subscribe(STORE.debug, () => {
+      orbitControls.enabled = STORE.debug.enabled;
+      axesHelper.visible = STORE.debug.enabled;
+    });
   },
-  // TODO: Toggle Debug Tools with Event Listener
 });
 
 /**
@@ -63,7 +70,12 @@ export const CameraHelperPlugin = CreateModule({
     helperCamera.name = "HelperCamera";
 
     const cameraHelper = new THREE.CameraHelper(helperCamera);
+    cameraHelper.visible = STORE.debug.enabled;
     ctx.scene.add(cameraHelper);
+
+    subscribe(STORE.debug, () => {
+      cameraHelper.visible = STORE.debug.enabled;
+    });
   },
 });
 
