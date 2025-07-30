@@ -101,7 +101,30 @@ export const CAR_KIT_SCENE = CreateModule({
         if (child?.isMesh) child.castShadow = true;
       });
       scene.add(car.scene);
-      car.scene.visible = car.scene.name === STATE.currentCar;
+
+      if (car.scene.name === STATE.currentCar) {
+        // Show the current car with entrance animation
+        car.scene.visible = true;
+        car.scene.scale.set(0, 0, 0); // Start from scale 0
+        car.scene.rotation.y = 0; // Reset rotation
+
+        // Entrance animation for the initial car
+        gsap.to(car.scene.scale, {
+          x: 1,
+          y: 1,
+          z: 1,
+          duration: 0.8,
+          ease: "back.out(1.7)",
+        });
+
+        gsap.to(car.scene.rotation, {
+          y: Math.PI * 2, // 360 degrees
+          duration: 0.8,
+          ease: "power2.out",
+        });
+      } else {
+        car.scene.visible = false;
+      }
     });
 
     // Plane
@@ -151,7 +174,30 @@ export const CAR_KIT_SCENE = CreateModule({
 
         STATE.cars.forEach((carName) => {
           const car = scene.getObjectByName(carName);
-          if (car) car.visible = car.name === nextCarName;
+          if (car && car.name !== nextCarName) {
+            car.visible = false; // Hide other cars
+          }
+          if (car && car.name === nextCarName) {
+            // Show and animate the new car
+            car.visible = true;
+            car.scale.set(0, 0, 0); // Start from scale 0
+            car.rotation.y = 0; // Reset rotation
+
+            // Entrance animation: scale from 0 and 360° rotation
+            gsap.to(car.scale, {
+              x: 1,
+              y: 1,
+              z: 1,
+              duration: 0.8,
+              ease: "back.out(1.7)",
+            });
+
+            gsap.to(car.rotation, {
+              y: Math.PI * 2, // 360 degrees
+              duration: 0.8,
+              ease: "power2.out",
+            });
+          }
         });
       }
     });
