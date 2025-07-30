@@ -4,6 +4,7 @@ import { NewResourceLoader } from "../lib/ResourceLoader";
 import * as THREE from "three";
 import { carKitStore as STATE } from "../store/carkit.store";
 import { subscribe } from "valtio/vanilla";
+import gsap from "gsap";
 
 // ========================================
 // Variables
@@ -13,13 +14,14 @@ const CONSTANTS = {
     light: "#f8fafc",
     dark: "#0f172b",
   },
+  spotLightColor: "#faffd0",
 };
 
 const SCENE_OBJECTS = {
   plane: new THREE.Mesh(
-    new THREE.PlaneGeometry(30, 30),
+    new THREE.CircleGeometry(30, 30),
     new THREE.MeshStandardMaterial({
-      color: CONSTANTS.bgColor[STATE.colorTheme],
+      color: CONSTANTS.bgColor[STATE.colorTheme.value],
     })
   ),
 };
@@ -61,7 +63,8 @@ function createCarKitUI() {
   colorThemeBtn.classList.add("color-theme-btn");
   colorThemeBtn.innerText = "Color Theme";
   colorThemeBtn.addEventListener("click", () => {
-    STATE.colorTheme = STATE.colorTheme === "light" ? "dark" : "light";
+    STATE.colorTheme.value =
+      STATE.colorTheme.value === "light" ? "dark" : "light";
   });
 
   document.body.appendChild(alert);
@@ -78,7 +81,7 @@ export const CAR_KIT_SCENE = CreateModule({
   onInit: (ctx) => {
     createCarKitUI();
 
-    const bgColor = CONSTANTS.bgColor[STATE.colorTheme];
+    const bgColor = CONSTANTS.bgColor[STATE.colorTheme.value];
 
     const scene = ctx.scene;
     scene.background = new THREE.Color(bgColor);
@@ -108,11 +111,11 @@ export const CAR_KIT_SCENE = CreateModule({
 
     // Spot Light
     const spotLight = new THREE.SpotLight();
-    spotLight.color.set(new THREE.Color("#ffffff"));
+    spotLight.color.set(new THREE.Color(CONSTANTS.spotLightColor));
     spotLight.castShadow = true;
     spotLight.position.set(0, 5, 0);
     spotLight.target.position.set(0, 0, 0);
-    spotLight.intensity = 100;
+    spotLight.intensity = 120;
     spotLight.angle = Math.PI / 6;
     spotLight.penumbra = 0.1;
     spotLight.decay = 2;
@@ -151,17 +154,27 @@ export const CAR_KIT_SCENE = CreateModule({
       }
     });
 
-    subscribe(STATE, () => {
-      const bgColor = CONSTANTS.bgColor[STATE.colorTheme];
+    subscribe(STATE.colorTheme, () => {
+      const bgColor = CONSTANTS.bgColor[STATE.colorTheme.value];
       const newColor = new THREE.Color(bgColor);
 
-      // TODO: animate background color change with gsap
-
       const scene = ctx.scene;
-      scene.background = newColor;
-
       const plane = SCENE_OBJECTS.plane;
-      plane.material.color.set(newColor);
+
+      gsap.to(scene.background, {
+        r: newColor.r,
+        g: newColor.g,
+        b: newColor.b,
+        duration: 0.5,
+        ease: "power1.inOut",
+      });
+      gsap.to(plane.material.color, {
+        r: newColor.r,
+        g: newColor.g,
+        b: newColor.b,
+        duration: 0.5,
+        ease: "power1.inOut",
+      });
     });
   },
   onAnimate: (ctx) => {
@@ -173,6 +186,5 @@ export const CAR_KIT_SCENE = CreateModule({
     const rotationSpeed = 0.5;
 
     if (car) car.rotation.y += deltaTime * rotationSpeed; // Rotate the car
-    plane.rotation.z += deltaTime * rotationSpeed; // Rotate the plane along with the car
   },
 });

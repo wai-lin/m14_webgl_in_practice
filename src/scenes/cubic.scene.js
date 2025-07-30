@@ -2,6 +2,9 @@ import { rangeTimedScale } from "../lib/utils";
 import { CreateModule } from "../lib/Program";
 import * as THREE from "three";
 
+// ========================================
+// Variables
+// ========================================
 const SCENE_OBJECTS = {
   cube: new THREE.Mesh(
     new THREE.BoxGeometry(1, 1, 1),
@@ -9,6 +12,9 @@ const SCENE_OBJECTS = {
   ),
 };
 
+// ========================================
+// Scene
+// ========================================
 export const CUBIC_SCENE = CreateModule({
   name: "CubicScene",
   onInit(ctx) {
