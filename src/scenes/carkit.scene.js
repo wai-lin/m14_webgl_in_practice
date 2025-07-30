@@ -2,23 +2,25 @@ import { ev } from "../lib/Events";
 import { CreateModule } from "../lib/Program";
 import { NewResourceLoader } from "../lib/ResourceLoader";
 import * as THREE from "three";
+import { carKitStore as STATE } from "../store/carkit.store";
+import { subscribe } from "valtio/vanilla";
 
 // ========================================
 // Variables
 // ========================================
 const CONSTANTS = {
-  bgColor: "#0f172b",
-};
-
-const STATE = {
-  cars: ["race", "truck", "van"],
-  currentCar: "race",
+  bgColor: {
+    light: "#f8fafc",
+    dark: "#0f172b",
+  },
 };
 
 const SCENE_OBJECTS = {
   plane: new THREE.Mesh(
     new THREE.PlaneGeometry(30, 30),
-    new THREE.MeshStandardMaterial({ color: CONSTANTS.bgColor })
+    new THREE.MeshStandardMaterial({
+      color: CONSTANTS.bgColor[STATE.colorTheme],
+    })
   ),
 };
 
@@ -50,7 +52,18 @@ resourceLoader.queueResources(
 function createCarKitUI() {
   const alert = document.createElement("div");
   alert.classList.add("alert");
-  alert.innerHTML = `<strong>Car Kit Scene</strong> - Press <kbd>SPACE</kbd> to change the car model.`;
+  alert.innerHTML = `<p>
+  <strong>Car Kit Scene</strong> - Press <kbd>SPACE</kbd> to change the car model.
+</p>`;
+
+  const colorThemeBtn = document.createElement("button");
+  alert.appendChild(colorThemeBtn);
+  colorThemeBtn.classList.add("color-theme-btn");
+  colorThemeBtn.innerText = "Color Theme";
+  colorThemeBtn.addEventListener("click", () => {
+    STATE.colorTheme = STATE.colorTheme === "light" ? "dark" : "light";
+  });
+
   document.body.appendChild(alert);
 }
 
@@ -65,8 +78,10 @@ export const CAR_KIT_SCENE = CreateModule({
   onInit: (ctx) => {
     createCarKitUI();
 
+    const bgColor = CONSTANTS.bgColor[STATE.colorTheme];
+
     const scene = ctx.scene;
-    scene.background = new THREE.Color("#0f172b");
+    scene.background = new THREE.Color(bgColor);
 
     // Enable shadows
     ctx.webgl.shadowMap.enabled = true;
@@ -75,7 +90,6 @@ export const CAR_KIT_SCENE = CreateModule({
     // Cars
     STATE.cars.forEach((carName) => {
       const car = resourceLoader.getResource(carName);
-      console.log(`Loaded car model: ${carName}`, car);
       car.scene.name = carName;
       // Enable shadows for all meshes in the car model
       car.scene.traverse((child) => {
@@ -87,6 +101,7 @@ export const CAR_KIT_SCENE = CreateModule({
 
     // Plane
     const plane = SCENE_OBJECTS.plane;
+    plane.name = "Plane";
     plane.receiveShadow = true;
     plane.rotation.x = -Math.PI / 2;
     scene.add(plane);
@@ -134,6 +149,19 @@ export const CAR_KIT_SCENE = CreateModule({
           if (car) car.visible = car.name === nextCarName;
         });
       }
+    });
+
+    subscribe(STATE, () => {
+      const bgColor = CONSTANTS.bgColor[STATE.colorTheme];
+      const newColor = new THREE.Color(bgColor);
+
+      // TODO: animate background color change with gsap
+
+      const scene = ctx.scene;
+      scene.background = newColor;
+
+      const plane = SCENE_OBJECTS.plane;
+      plane.material.color.set(newColor);
     });
   },
   onAnimate: (ctx) => {
