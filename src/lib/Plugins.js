@@ -1,8 +1,8 @@
-import * as THREE from "three";
 import Stats from "stats.js";
+import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls";
-import { CreateModule } from "./Program";
 import { ev } from "./Events";
+import { CreateModule } from "./Program";
 
 /** @type {Stats} */
 let stats;

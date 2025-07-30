@@ -1,5 +1,5 @@
-import { rangeTimedScale } from "../lib/utils";
-import { CreateModule } from "../lib/Program";
+import { CreateModule } from "@lib/Program";
+import { rangeTimedScale } from "@lib/utils";
 import * as THREE from "three";
 
 // ========================================

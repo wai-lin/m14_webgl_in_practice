@@ -1,10 +1,10 @@
-import { ev } from "../lib/Events";
-import { CreateModule } from "../lib/Program";
-import { NewResourceLoader } from "../lib/ResourceLoader";
-import * as THREE from "three";
-import { carKitStore as STATE } from "../store/carkit.store";
-import { subscribe } from "valtio/vanilla";
+import { ev } from "@lib/Events";
+import { CreateModule } from "@lib/Program";
+import { NewResourceLoader } from "@lib/ResourceLoader";
+import { carKitStore as STATE } from "@store/carkit.store";
 import gsap from "gsap";
+import * as THREE from "three";
+import { subscribe } from "valtio/vanilla";
 
 // ========================================
 // Variables

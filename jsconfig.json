@@ -12,7 +12,12 @@
         "node_modules/@types/three/examples/jsm/loaders/*"
       ],
       "mitt": ["node_modules/mitt/index"],
-      "valtio/vanilla": ["node_modules/valtio/vanilla"]
+      "valtio/vanilla": ["node_modules/valtio/vanilla"],
+      "@lib/*": ["src/lib/*"],
+      "@post_processors/*": ["src/post_processors/*"],
+      "@scenes/*": ["src/scenes/*"],
+      "@store/*": ["src/store/*"],
+      "@/*": ["src/*"]
     }
   },
   "include": ["src/**/*"]

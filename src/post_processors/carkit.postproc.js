@@ -1,8 +1,5 @@
+import { CreateModule } from "@lib/Program";
 import { EffectPass, GlitchEffect, PixelationEffect } from "postprocessing";
-import { CreateModule } from "../lib/Program";
-import { ev } from "../lib/Events";
-import { carKitStore as STATE } from "../store/carkit.store";
-import { subscribe } from "valtio/vanilla";
 
 export const CAR_KIT_POSTPROC = CreateModule({
   name: "CarKitPostProcessor",

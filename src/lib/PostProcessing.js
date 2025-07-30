@@ -1,4 +1,4 @@
-import { EffectComposer, RenderPass, EffectPass } from "postprocessing";
+import { EffectComposer, RenderPass } from "postprocessing";
 
 /**
  * Create a post-processing composer for the given WebGL renderer, scene, and camera.

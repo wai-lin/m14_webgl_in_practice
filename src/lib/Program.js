@@ -1,5 +1,5 @@
-import { CreatePostProcessor } from "./PostProcessing";
 import * as THREE from "three";
+import { CreatePostProcessor } from "./PostProcessing";
 
 const _hooksRunner = (hooks = []) => {
   return (ctx) => {
