@@ -16,7 +16,9 @@
   },
   "dependencies": {
     "mitt": "^3.0.1",
+    "postprocessing": "^6.37.6",
     "stats.js": "^0.17.0",
-    "three": "^0.178.0"
+    "three": "^0.178.0",
+    "valtio": "^2.1.5"
   }
 }

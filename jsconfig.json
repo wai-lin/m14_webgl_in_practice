@@ -11,7 +11,8 @@
       "three/addons/loaders/*": [
         "node_modules/@types/three/examples/jsm/loaders/*"
       ],
-      "mitt": ["node_modules/mitt/index"]
+      "mitt": ["node_modules/mitt/index"],
+      "valtio/vanilla": ["node_modules/valtio/vanilla"]
     }
   },
   "include": ["src/**/*"]
