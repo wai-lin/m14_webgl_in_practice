@@ -1,7 +1,6 @@
 import { DragGesture, WheelGesture } from "@use-gesture/vanilla";
 import mitt from "mitt";
 import { STORE } from "./store";
-import { getElementById } from "./utils";
 
 /**
  * All events that can be emitted by the application.
@@ -33,10 +32,6 @@ export function EventsManager(canvasEl) {
   addEventListener("resize", (e) => ev.emit("onWindowResize", e));
   addEventListener("keydown", (e) => ev.emit("onKeyDown", e));
 
-  new DragGesture(canvasEl, (state) => {
-    ev.emit("onCanvasDrag", state);
-  });
-  new WheelGesture(canvasEl, (state) => {
-    ev.emit("onCanvasWheel", state);
-  });
+  new DragGesture(canvasEl, (state) => ev.emit("onCanvasDrag", state));
+  new WheelGesture(canvasEl, (state) => ev.emit("onCanvasWheel", state));
 }
