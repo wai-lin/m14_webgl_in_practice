@@ -1,7 +1,6 @@
 import { ev } from "@lib/Events";
 import { CreateModule } from "@lib/Program";
 import gsap from "gsap";
-import { damp } from "maath/easing";
 import * as THREE from "three";
 
 // ========================================
@@ -144,8 +143,18 @@ function updateGrid(items, bounds, delta) {
 
     const helpers = circlePlane.userData.helpers;
     // Smooth animation
-    damp(circlePlane.position, "x", helpers.position.x, 0.1, delta);
-    damp(circlePlane.position, "y", helpers.position.y, 0.1, delta);
+    circlePlane.position.x = THREE.MathUtils.damp(
+      circlePlane.position.x,
+      helpers.position.x,
+      10,
+      delta
+    );
+    circlePlane.position.y = THREE.MathUtils.damp(
+      circlePlane.position.y,
+      helpers.position.y,
+      10,
+      delta
+    );
   });
 }
 
