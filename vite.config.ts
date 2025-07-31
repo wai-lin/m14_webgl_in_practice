@@ -1,13 +1,14 @@
 import tailwindcss from "@tailwindcss/vite";
 import { resolve } from "node:path";
 import { defineConfig } from "vite";
+import glsl from "vite-plugin-glsl";
 
 function resolvePath(path: string) {
   return resolve(__dirname, path);
 }
 
 export default defineConfig({
-  plugins: [tailwindcss()],
+  plugins: [tailwindcss(), glsl()],
   resolve: {
     alias: {
       "@components": resolvePath("./src/components"),
