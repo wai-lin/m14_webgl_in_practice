@@ -1,6 +1,6 @@
 import Stats from "stats.js";
 import * as THREE from "three";
-import { OrbitControls } from "three/addons/controls/OrbitControls";
+import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { subscribe } from "valtio/vanilla";
 import { ev } from "./Events";
 import { CreateModule } from "./Program";

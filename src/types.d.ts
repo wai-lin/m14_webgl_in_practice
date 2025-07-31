@@ -2,6 +2,8 @@ import { EffectComposer } from "postprocessing";
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls";
 
+export {};
+
 type PrettyObject<G> = {
   [K in keyof G]: G[K];
 };

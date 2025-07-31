@@ -10,6 +10,7 @@ export default defineConfig({
   plugins: [tailwindcss()],
   resolve: {
     alias: {
+      "@components": resolvePath("./src/components"),
       "@lib": resolvePath("./src/lib"),
       "@post_processors": resolvePath("./src/post_processors"),
       "@scenes": resolvePath("./src/scenes"),

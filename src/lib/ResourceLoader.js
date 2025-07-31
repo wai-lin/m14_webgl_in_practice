@@ -1,5 +1,6 @@
 import * as THREE from "three";
-import { GLTFLoader } from "three/addons/loaders/GLTFLoader";
+import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+
 
 export function NewResourceLoader() {
   /** @type {Record<ProgramTypes.ResourceType, THREE.Loader>} */

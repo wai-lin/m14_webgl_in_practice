@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { CreatePostProcessor } from "./PostProcessing";
+import { getElementById } from "./utils";
 
 const _hooksRunner = (hooks = []) => {
   return (ctx) => {
@@ -34,10 +35,10 @@ export const CreateModule = (config) => {
 
 /**
  * Creates a new three.js program instance.
- * @param {string} canvasId
+ * @param {HTMLElement} canvasEl
  * @param {"webgl" | "post-processor"} [renderer="webgl"]
  */
-export function NewProgram(canvasId, renderer = "webgl") {
+export function NewProgram(canvasEl, renderer = "webgl") {
   const _contextMap = new Map();
   const _modules = [];
 
@@ -83,11 +84,7 @@ export function NewProgram(canvasId, renderer = "webgl") {
   });
 
   const _coreInit = () => {
-    const id = (canvasId ?? "").replace("#", "");
-    if (id === "") throw new Error("Canvas ID must be provided");
-
-    _canvasEl = document.getElementById(id);
-    if (!_canvasEl) throw new Error(`Canvas with ID ${id} not found`);
+    _canvasEl = canvasEl;
 
     let pixelRatio = THREE.MathUtils.clamp(
       window.devicePixelRatio,
