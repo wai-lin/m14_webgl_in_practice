@@ -1,5 +1,5 @@
-import fragmentShader from "@/glsl/index.frag";
-import vertexShader from "@/glsl/index.vert";
+import fragmentShader from "@/glsl/simple/index.frag";
+import vertexShader from "@/glsl/simple/index.vert";
 import { CreateModule } from "@lib/Program";
 import GUI from "lil-gui";
 import * as THREE from "three";
