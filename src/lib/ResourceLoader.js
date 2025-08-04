@@ -1,7 +1,6 @@
 import * as THREE from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 
-
 export function NewResourceLoader() {
   /** @type {Record<ProgramTypes.ResourceType, THREE.Loader>} */
   const _loaders = {
@@ -45,7 +44,9 @@ export function NewResourceLoader() {
       return new Promise((resolve, reject) => {
         const loader = _loaders[r.type];
         if (!loader) {
-          const error = new Error(`No loader found for resource type: ${r.type}`);
+          const error = new Error(
+            `No loader found for resource type: ${r.type}`
+          );
           console.error(error.message);
           if (r.rejectOnFailure) reject(error);
           else resolve(null);
@@ -71,26 +72,40 @@ export function NewResourceLoader() {
 
     try {
       const results = await Promise.allSettled(promises);
-      
+
       // Check if any critical resources (rejectOnFailure: true) failed
       const criticalFailures = results
         .map((result, index) => ({ result, resource: _resourcesToLoad[index] }))
-        .filter(({ result, resource }) => 
-          result.status === 'rejected' && resource.rejectOnFailure
+        .filter(
+          ({ result, resource }) =>
+            result.status === "rejected" && resource.rejectOnFailure
         );
 
       if (criticalFailures.length > 0) {
-        const failedNames = criticalFailures.map(({ resource }) => resource.name);
-        throw new Error(`Critical resources failed to load: ${failedNames.join(', ')}`);
+        const failedNames = criticalFailures.map(
+          ({ resource }) => resource.name
+        );
+        throw new Error(
+          `Critical resources failed to load: ${failedNames.join(", ")}`
+        );
       }
 
-      const successCount = results.filter(r => r.status === 'fulfilled').length;
-      const failureCount = results.filter(r => r.status === 'rejected').length;
-      
-      console.log(`Resources loaded: ${successCount} successful, ${failureCount} failed`);
+      const successCount = results.filter(
+        (r) => r.status === "fulfilled"
+      ).length;
+      const failureCount = results.filter(
+        (r) => r.status === "rejected"
+      ).length;
+
+      console.log(
+        `Resources loaded: ${successCount} successful, ${failureCount} failed`
+      );
     } catch (error) {
       console.error("Error loading resources:", error);
       throw error; // Re-throw for critical failures
+    } finally {
+      // Clear the queue after loading
+      _resourcesToLoad.length = 0;
     }
   };
 
