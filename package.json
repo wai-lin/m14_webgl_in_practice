@@ -8,6 +8,19 @@
     "build": "vue-tsc -b && vite build",
     "preview": "vite preview"
   },
+  "prettier": {
+    "singleQuote": false,
+    "semi": true,
+    "trailingComma": "all",
+    "useTabs": true,
+    "bracketSpacing": true,
+    "arrowParens": "always",
+    "endOfLine": "lf",
+    "plugins": [
+      "prettier-plugin-organize-imports",
+      "prettier-plugin-tailwindcss"
+    ]
+  },
   "dependencies": {
     "@use-gesture/vanilla": "^10.3.1",
     "gsap": "^3.13.0",
@@ -28,6 +41,8 @@
     "@vitejs/plugin-vue": "^5.2.1",
     "@vue/tsconfig": "^0.7.0",
     "daisyui": "^5.0.50",
+    "prettier-plugin-organize-imports": "^4.2.0",
+    "prettier-plugin-tailwindcss": "^0.6.14",
     "tailwindcss": "^4.1.11",
     "typescript": "~5.7.2",
     "vite": "^6.1.0",
