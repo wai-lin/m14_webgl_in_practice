@@ -1,8 +1,7 @@
 import { EffectComposer } from "postprocessing";
 import * as THREE from "three";
-import { OrbitControls } from "three/addons/controls/OrbitControls";
 
-export {};
+export { };
 
 type PrettyObject<G> = {
   [K in keyof G]: G[K];
@@ -36,6 +35,7 @@ declare global {
       onAfterAnimate?: OnAfterAnimateFn;
     };
     export type CreateModuleFn = (config: ModuleOptions) => ModuleOptions;
+    export type Module = ReturnType<CreateModuleFn>;
 
     // === Resources ===
     export type ResourceType = "gltf" | "texture";

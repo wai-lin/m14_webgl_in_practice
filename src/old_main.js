@@ -7,8 +7,7 @@ import {
 } from "@lib/Plugins";
 import { NewProgram } from "@lib/Program";
 import { getElementById } from "@lib/utils";
-import { GRID_SHADER_CAMERA, GRID_SHADER_SCENE } from "@scenes/grid_shader.scene";
-
+import { AUDIO_VIS_SCENE } from "@scenes/audio_vis.scene";
 
 const canvasEl = getElementById("webgl-canvas");
 
@@ -41,8 +40,10 @@ EventsManager(canvasEl);
     /** Glsl **/
     // GLSL_SCENE
     /** Grid Shader Slider **/
-    GRID_SHADER_CAMERA,
-    GRID_SHADER_SCENE,
+    // GRID_SHADER_CAMERA,
+    // GRID_SHADER_SCENE,
+    /** Audio Visualizer **/
+    AUDIO_VIS_SCENE
   );
 
   pg.run();
