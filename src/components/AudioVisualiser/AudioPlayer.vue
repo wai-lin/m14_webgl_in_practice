@@ -23,7 +23,18 @@ const audioData = reactive({ ...audioVisStore.currentWaveDelta });
 function drawWaveform() {
 	if (!waveformCanvas.value || !analyser) return;
 
+	// Continue drawing regardless of play state to maintain the loop
 	requestAnimationFrame(drawWaveform);
+
+	// Only process and draw when playing
+	if (audioVisStore.audioPlayerStatus.value !== "playing") {
+		// Clear canvas when not playing
+		const canvas = waveformCanvas.value;
+		const c = canvas.getContext("2d");
+		c.fillStyle = "black";
+		c.fillRect(0, 0, canvas.width, canvas.height);
+		return;
+	}
 
 	const canvas = waveformCanvas.value;
 	const c = canvas.getContext("2d");
@@ -164,12 +175,12 @@ const onAudioPlay = () => {
 
 const onPlaying = () => {
 	audioVisStore.applicationState.value = "dance";
-	audioVisStore.audioPlayerStatus = "playing";
+	audioVisStore.audioPlayerStatus.value = "playing";
 };
 
 const onPause = () => {
 	audioVisStore.applicationState.value = "idle";
-	audioVisStore.audioPlayerStatus = "paused";
+	audioVisStore.audioPlayerStatus.value = "paused";
 };
 
 // Load default audio when component mounts
