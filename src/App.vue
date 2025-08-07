@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import AudioPlayer from "@components/AudioVisualiser/AudioPlayer.vue";
 import WebGL from "@components/WebGL.vue";
+import { AUDIO_VIS_POSTPROC } from "@post_processors/audio_vis.postproc";
 import { AUDIO_VIS_SCENE } from "@scenes/audio_vis.scene";
 
 const modules: ProgramTypes.Module[] = [
@@ -9,6 +10,7 @@ const modules: ProgramTypes.Module[] = [
 	// GRID_SHADER_CAMERA,
 	// GRID_SHADER_SCENE,
 	AUDIO_VIS_SCENE,
+	AUDIO_VIS_POSTPROC,
 ];
 </script>
 
