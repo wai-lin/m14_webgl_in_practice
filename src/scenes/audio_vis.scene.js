@@ -186,6 +186,7 @@ function updateAudioReactiveLighting() {
 	audioReactiveLight.angle = baseAngle + angleVariation;
 }
 
+let currentAnimation = "idle";
 /**
  * Switches between animations based on audio delta value
  */
@@ -194,21 +195,57 @@ function autoAnimateBaseOnWaveForm() {
 		Object.values(animationActions).forEach((action) => {
 			action.weight = 0;
 		});
+		currentAnimation = "idle";
 		return;
 	}
 
 	const waveForm = store.currentWaveDelta;
 	const shouldSlowDance = waveForm.delta < 0.05;
+	const targetAnimation = shouldSlowDance ? "slow_dance" : "big_dance";
 
-	const slowDanceMoves = ["chicken", "hiphop"];
-	const bigDanceMoves = ["gangnam_style", "shuffling"];
+	// Only trigger crossfade if animation type has changed
+	if (currentAnimation !== targetAnimation) {
+		const slowDanceMoves = ["chicken", "hiphop"];
+		const bigDanceMoves = ["gangnam_style", "shuffling"];
 
-	slowDanceMoves.forEach((key) => {
-		animationActions[key].weight = shouldSlowDance ? 1 : 0;
-	});
-	bigDanceMoves.forEach((key) => {
-		animationActions[key].weight = shouldSlowDance ? 0 : 1;
-	});
+		// Crossfade to slow dance moves
+		if (targetAnimation === "slow_dance") {
+			slowDanceMoves.forEach((key) => {
+				gsap.to(animationActions[key], {
+					weight: 1,
+					duration: 0.5,
+					ease: "power2.inOut",
+				});
+			});
+			bigDanceMoves.forEach((key) => {
+				gsap.to(animationActions[key], {
+					weight: 0,
+					duration: 0.5,
+					ease: "power2.inOut",
+				});
+			});
+		}
+
+		// Crossfade to big dance moves
+		if (targetAnimation === "big_dance") {
+			bigDanceMoves.forEach((key) => {
+				gsap.to(animationActions[key], {
+					weight: 1,
+					duration: 0.5,
+					ease: "power2.inOut",
+				});
+			});
+			slowDanceMoves.forEach((key) => {
+				gsap.to(animationActions[key], {
+					weight: 0,
+					duration: 0.5,
+					ease: "power2.inOut",
+				});
+			});
+		}
+
+		currentAnimation = targetAnimation;
+	}
 }
 
 // ========================================
@@ -306,7 +343,8 @@ export const AUDIO_VIS_SCENE = CreateModule({
 					uniforms.u_AudioDelta.value = store.currentWaveDelta.delta;
 					uniforms.u_AudioAmplitude.value = store.currentWaveDelta.amplitude;
 					uniforms.u_AudioEnergy.value = store.currentWaveDelta.energy;
-					uniforms.u_AudioPlaying.value = store.audioPlayerStatus.value === "playing";
+					uniforms.u_AudioPlaying.value =
+						store.audioPlayerStatus.value === "playing";
 				}
 			});
 		});
