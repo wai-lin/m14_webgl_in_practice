@@ -163,10 +163,12 @@ const onAudioPlay = () => {
 };
 
 const onPlaying = () => {
+	audioVisStore.applicationState.value = "dance";
 	audioVisStore.audioPlayerStatus = "playing";
 };
 
 const onPause = () => {
+	audioVisStore.applicationState.value = "idle";
 	audioVisStore.audioPlayerStatus = "paused";
 };
 

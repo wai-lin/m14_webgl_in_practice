@@ -1,7 +1,8 @@
 import { proxy } from "valtio/vanilla";
 
 export const audioVisStore = proxy({
-	audioPlayerStatus: "stopped", // "playing", "paused", "stopped"
+	applicationState: { value: "idle" }, // "idle", "dance"
+	audioPlayerStatus: { value: "stopped" }, // "playing", "paused", "stopped"
 	elapsedTime: 0, // Time delta for clock updates
 	currentWaveDelta: {
 		delta: 0, // Rate of change in waveform (0-1)
