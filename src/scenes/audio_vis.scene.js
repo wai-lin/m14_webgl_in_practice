@@ -43,7 +43,7 @@ const resources = NewResourceLoader();
 resources.queueResources({
 	name: "soldier",
 	type: "gltf",
-	url: "/dance/models/soldier.glb",
+	url: "/dance/models/soldier_compressed.glb",
 	rejectOnFailure: true,
 });
 
@@ -158,7 +158,6 @@ function addAnimationActions(ctx) {
 		animationActions[animation.name] = action;
 		action.play();
 	});
-	// TODO: Add idle animation
 }
 
 /**
@@ -196,7 +195,8 @@ function updateAudioReactiveLighting() {
 function autoAnimateBaseOnWaveForm() {
 	if (store.audioPlayerStatus.value !== "playing") {
 		Object.values(animationActions).forEach((action) => {
-			action.weight = 0;
+			const isIdleAction = action._clip.name.includes("idle");
+			action.weight = isIdleAction ? 1 : 0;
 		});
 		currentAnimation = "idle";
 		return;
@@ -208,8 +208,17 @@ function autoAnimateBaseOnWaveForm() {
 
 	// Only trigger crossfade if animation type has changed
 	if (currentAnimation !== targetAnimation) {
+		const idleActions = ["neutral_idle", "happy_idle"];
 		const slowDanceMoves = ["chicken", "hiphop"];
 		const bigDanceMoves = ["gangnam_style", "shuffling"];
+
+		idleActions.forEach((key) => {
+			gsap.to(animationActions[key], {
+				weight: 0,
+				duration: 0.5,
+				ease: "power2.inOut",
+			});
+		});
 
 		// Crossfade to slow dance moves
 		if (targetAnimation === "slow_dance") {
@@ -282,7 +291,20 @@ export const AUDIO_VIS_SCENE = CreateModule({
 		const camera = ctx.camera;
 		const character = ctx.scene.getObjectByName("soldier");
 
-		// TODO: Play idle animation when audio is not playing
+		// Play idle animation when audio is not playing
+		subscribe(store.applicationState, () => {
+			if (store.applicationState.value === "idle") {
+				currentAnimation = "idle";
+				Object.values(animationActions).forEach((action) => {
+					const isIdleAction = action._clip.name.includes("idle");
+					gsap.to(action, {
+						weight: isIdleAction ? 1 : 0,
+						duration: 0.5,
+						ease: "power2.inOut",
+					});
+				});
+			}
+		});
 
 		// Change camera position and lookAt
 		// with transition based on application state
