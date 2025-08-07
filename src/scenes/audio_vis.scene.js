@@ -33,6 +33,8 @@ let animationMixer;
 const animationActions = {};
 /** @type {THREE.SpotLight} */
 let audioReactiveLight;
+/** @type {"idle" | "slow_dance" | "big_dance"} */
+let currentAnimation = "idle";
 
 // ========================================
 // Resource Loader
@@ -93,7 +95,9 @@ function addLights(ctx) {
 function addGroundPlane(ctx) {
 	const mesh = new THREE.Mesh(
 		new THREE.CircleGeometry(30, 30),
-		new THREE.MeshStandardMaterial({ color: 0xcbcbcb }),
+		new THREE.MeshStandardMaterial({
+			color: new THREE.Color(CONSTANTS.bgColor.dark),
+		}),
 	);
 	mesh.rotation.x = -Math.PI / 2;
 	mesh.receiveShadow = true;
@@ -186,7 +190,6 @@ function updateAudioReactiveLighting() {
 	audioReactiveLight.angle = baseAngle + angleVariation;
 }
 
-let currentAnimation = "idle";
 /**
  * Switches between animations based on audio delta value
  */
@@ -263,7 +266,7 @@ export const AUDIO_VIS_SCENE = CreateModule({
 
 		/// Set Background Color
 		const scene = ctx.scene;
-		scene.background = new THREE.Color(CONSTANTS.bgColor.light);
+		scene.background = new THREE.Color(CONSTANTS.bgColor.dark);
 
 		/// Set Camera
 		const camera = ctx.camera;
