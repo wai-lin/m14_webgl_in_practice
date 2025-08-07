@@ -1,49 +1,48 @@
 <script setup lang="ts">
 import { EventsManager } from "@lib/Events";
 import {
-  CameraHelperPlugin,
-  DebugToolsPlugin,
-  StatsPlugin,
-  WindowResizePlugin,
+	CameraHelperPlugin,
+	DebugToolsPlugin,
+	StatsPlugin,
+	WindowResizePlugin,
 } from "@lib/Plugins";
 import { NewProgram } from "@lib/Program";
 import { useTemplateRef, watch } from "vue";
 
-type ModuleReturnType = ReturnType<ProgramTypes.CreateModuleFn>;
 const props = defineProps<{
-  modules: ModuleReturnType[];
+	modules: ProgramTypes.Module[];
 }>();
 
 const canvasElement = useTemplateRef("webgl-canvas");
 
 watch(canvasElement, (canvasElement) => {
-  // Don't run if canvasElement is not defined
-  if (!canvasElement) return;
+	// Don't run if canvasElement is not defined
+	if (!canvasElement) return;
 
-  /// Inisialize global events listeners
-  EventsManager(canvasElement);
+	/// Inisialize global events listeners
+	EventsManager(canvasElement);
 
-  /// Create a new WebGL program
-  const p = NewProgram(canvasElement, "post-processor");
+	/// Create a new WebGL program
+	const p = NewProgram(canvasElement, "post-processor");
 
-  /***** Plugins *****/
-  p.use(
-    /** Debuggers **/
-    StatsPlugin,
-    DebugToolsPlugin,
-    CameraHelperPlugin,
-    /** Helpers **/
-    WindowResizePlugin
-  );
+	/***** Plugins *****/
+	p.use(
+		/** Debuggers **/
+		StatsPlugin,
+		DebugToolsPlugin,
+		CameraHelperPlugin,
+		/** Helpers **/
+		WindowResizePlugin,
+	);
 
-  /***** Modules *****/
-  p.use(...props.modules);
+	/***** Modules *****/
+	p.use(...props.modules);
 
-  p.run();
+	p.run();
 });
 </script>
 
 <template>
-  <canvas ref="webgl-canvas"></canvas>
-  <slot />
+	<canvas ref="webgl-canvas"></canvas>
+	<slot />
 </template>
