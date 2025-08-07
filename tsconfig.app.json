@@ -15,6 +15,7 @@
     "paths": {
       "@components/*": ["src/components/*"],
       "@composables/*": ["src/composables/*"],
+      "@glsl/*": ["src/glsl/*"],
       "@lib/*": ["src/lib/*"],
       "@post_processors/*": ["src/post_processors/*"],
       "@scenes/*": ["src/scenes/*"],
