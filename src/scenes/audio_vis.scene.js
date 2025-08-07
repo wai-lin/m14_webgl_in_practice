@@ -129,6 +129,7 @@ function addModel(ctx) {
 						u_AudioDelta: 0,
 						u_AudioAmplitude: 0,
 						u_AudioEnergy: 0,
+						u_AudioPlaying: false,
 					},
 				})(shader);
 			};
@@ -305,6 +306,7 @@ export const AUDIO_VIS_SCENE = CreateModule({
 					uniforms.u_AudioDelta.value = store.currentWaveDelta.delta;
 					uniforms.u_AudioAmplitude.value = store.currentWaveDelta.amplitude;
 					uniforms.u_AudioEnergy.value = store.currentWaveDelta.energy;
+					uniforms.u_AudioPlaying.value = store.audioPlayerStatus.value === "playing";
 				}
 			});
 		});
