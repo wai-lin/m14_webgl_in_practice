@@ -40,12 +40,19 @@ let currentAnimation = "idle";
 // Resource Loader
 // ========================================
 const resources = NewResourceLoader();
-resources.queueResources({
-	name: "soldier",
-	type: "gltf",
-	url: "/dance/models/soldier_compressed.glb",
-	rejectOnFailure: true,
-});
+resources.queueResources(
+	{
+		name: "galaxy",
+		type: "texture",
+		url: "/dance/galaxy_opt.jpg",
+	},
+	{
+		name: "soldier",
+		type: "gltf",
+		url: "/dance/models/soldier_compressed.glb",
+		rejectOnFailure: true,
+	},
+);
 
 // ========================================
 // Functions
@@ -67,7 +74,7 @@ function addLights(ctx) {
 	audioReactiveLight.castShadow = true;
 	audioReactiveLight.position.set(0, 5, 0);
 	audioReactiveLight.target.position.set(0, 0, 0);
-	audioReactiveLight.intensity = 80;
+	audioReactiveLight.intensity = 120;
 	audioReactiveLight.angle = Math.PI / 5;
 	audioReactiveLight.penumbra = 0.01;
 	audioReactiveLight.decay = 2.2;
@@ -93,10 +100,13 @@ function addLights(ctx) {
  * @param {ProgramTypes.Context} ctx
  */
 function addGroundPlane(ctx) {
+	const texture = resources.getResource("galaxy");
+
 	const mesh = new THREE.Mesh(
 		new THREE.CircleGeometry(30, 30),
 		new THREE.MeshStandardMaterial({
-			color: new THREE.Color(CONSTANTS.bgColor.dark),
+			map: texture,
+			// color: new THREE.Color(CONSTANTS.bgColor.dark),
 		}),
 	);
 	mesh.rotation.x = -Math.PI / 2;
@@ -169,7 +179,7 @@ function updateAudioReactiveLighting() {
 	const waveForm = store.currentWaveDelta;
 
 	// Adjust light intensity based on audio amplitude
-	const baseIntensity = 80;
+	const baseIntensity = 120;
 	const intensityMultiplier = 1 + waveForm.amplitude * 2;
 	audioReactiveLight.intensity = baseIntensity * intensityMultiplier;
 
@@ -269,13 +279,19 @@ export const AUDIO_VIS_SCENE = CreateModule({
 		await resources.loadResources();
 	},
 	onInit: (ctx) => {
+		const galaxyTexture = resources.getResource("galaxy");
+		galaxyTexture.colorSpace = THREE.SRGBColorSpace;
+		galaxyTexture.magFilter = galaxyTexture.minFilter = THREE.LinearFilter;
+
 		/// Enable shadows
 		ctx.webgl.shadowMap.enabled = true;
 		ctx.webgl.shadowMap.type = THREE.PCFSoftShadowMap;
 
 		/// Set Background Color
 		const scene = ctx.scene;
-		scene.background = new THREE.Color(CONSTANTS.bgColor.dark);
+		scene.background = galaxyTexture;
+		scene.fog = new THREE.Fog(new THREE.Color("#060c15"), 0, 20);
+		// scene.background = new THREE.Color(CONSTANTS.bgColor.dark);
 
 		/// Set Camera
 		const camera = ctx.camera;
