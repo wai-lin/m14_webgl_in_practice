@@ -35,8 +35,6 @@ export const AUDIO_VIS_POSTPROC = CreateModule({
 		subscribe(store.currentWaveDelta, () => {
 			const hasExceededThreshold =
 				store.currentWaveDelta.delta > store.danceThreshold.value;
-			if (hasExceededThreshold)
-				console.log("Audio threshold exceeded:", store.currentWaveDelta.delta);
 
 			material.uniforms.u_AudioThresholdExceed.value = hasExceededThreshold;
 			material.uniforms.u_AudioDelta.vallue = store.currentWaveDelta.delta;

@@ -2,9 +2,11 @@ import audioVisFragment from "@glsl/audio_vis/index.frag";
 import audioVisVertex from "@glsl/audio_vis/index.vert";
 import { CreateModule } from "@lib/Program";
 import { NewResourceLoader } from "@lib/ResourceLoader";
+import { STORE as programStore } from "@lib/store";
 import { attachShader } from "@lib/utils";
 import { audioVisStore as store } from "@store/audioVis.store";
 import gsap from "gsap";
+import { GUI } from "lil-gui";
 import * as THREE from "three";
 import { subscribe } from "valtio/vanilla";
 
@@ -35,6 +37,8 @@ const animationActions = {};
 let audioReactiveLight;
 /** @type {"idle" | "slow_dance" | "big_dance"} */
 let currentAnimation = "idle";
+/** @type {GUI} */
+let gui;
 
 // ========================================
 // Resource Loader
@@ -171,6 +175,23 @@ function addAnimationActions(ctx) {
 }
 
 /**
+ * Creates GUI controls for animation weights
+ */
+function createAnimationGUI() {
+	// Clean up existing GUI if it exists
+	if (gui) {
+		gui.destroy();
+	}
+
+	gui = new GUI({ title: "Animation Actions" });
+
+	Object.keys(animationActions).forEach((actionName) => {
+		const action = animationActions[actionName];
+		gui.add(action, "weight", 0, 1, 0.001).name(actionName).listen().disable();
+	});
+}
+
+/**
  * Updates audio-reactive lighting effects
  */
 function updateAudioReactiveLighting() {
@@ -206,7 +227,20 @@ function autoAnimateBaseOnWaveForm() {
 	if (store.audioPlayerStatus.value !== "playing") {
 		Object.values(animationActions).forEach((action) => {
 			const isIdleAction = action._clip.name.includes("idle");
-			action.weight = isIdleAction ? 1 : 0;
+			if (isIdleAction && action.weight !== 1) {
+				gsap.to(action, {
+					weight: 1,
+					duration: 0.2,
+					ease: "power2.inOut",
+				});
+			}
+			if (!isIdleAction && action.weight !== 0) {
+				gsap.to(action, {
+					weight: 0,
+					duration: 0.2,
+					ease: "power2.inOut",
+				});
+			}
 		});
 		currentAnimation = "idle";
 		return;
@@ -219,8 +253,8 @@ function autoAnimateBaseOnWaveForm() {
 	// Only trigger crossfade if animation type has changed
 	if (currentAnimation !== targetAnimation) {
 		const idleActions = ["neutral_idle", "happy_idle"];
-		const slowDanceMoves = ["chicken", "hiphop"];
-		const bigDanceMoves = ["gangnam_style", "shuffling"];
+		const slowDanceMoves = ["chicken"];
+		const bigDanceMoves = ["gangnam_style"];
 
 		idleActions.forEach((key) => {
 			gsap.to(animationActions[key], {
@@ -235,14 +269,14 @@ function autoAnimateBaseOnWaveForm() {
 			slowDanceMoves.forEach((key) => {
 				gsap.to(animationActions[key], {
 					weight: 1,
-					duration: 0.5,
+					duration: 2,
 					ease: "power2.inOut",
 				});
 			});
 			bigDanceMoves.forEach((key) => {
 				gsap.to(animationActions[key], {
 					weight: 0,
-					duration: 0.5,
+					duration: 2,
 					ease: "power2.inOut",
 				});
 			});
@@ -302,10 +336,16 @@ export const AUDIO_VIS_SCENE = CreateModule({
 		addGroundPlane(ctx);
 		addModel(ctx);
 		addAnimationActions(ctx);
+		if (programStore.debug.enabled) createAnimationGUI();
 	},
 	onEventListener: (ctx) => {
 		const camera = ctx.camera;
 		const character = ctx.scene.getObjectByName("soldier");
+
+		subscribe(programStore.debug, () => {
+			if (!programStore.debug.enabled) gui?.destroy();
+			else createAnimationGUI();
+		});
 
 		// Play idle animation when audio is not playing
 		subscribe(store.applicationState, () => {
@@ -388,6 +428,8 @@ export const AUDIO_VIS_SCENE = CreateModule({
 						store.audioPlayerStatus.value === "playing";
 				}
 			});
+
+			// Update GUI controllers to reflect current animation weights
 		});
 	},
 	onAnimate: (ctx) => {
@@ -395,5 +437,13 @@ export const AUDIO_VIS_SCENE = CreateModule({
 		store.elapsedTime = ctx.clock.getElapsedTime();
 		autoAnimateBaseOnWaveForm();
 		updateAudioReactiveLighting();
+	},
+	onDestroy: () => {
+		// Clean up GUI when scene is destroyed
+		if (gui) {
+			gui.destroy();
+			gui = null;
+		}
+		guiControllers = {};
 	},
 });
