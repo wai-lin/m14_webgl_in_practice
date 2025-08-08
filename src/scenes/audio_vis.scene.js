@@ -252,9 +252,12 @@ function autoAnimateBaseOnWaveForm() {
 
 	// Only trigger crossfade if animation type has changed
 	if (currentAnimation !== targetAnimation) {
+		const rand = Math.random();
+		const isRandOver50 = rand > 0.5;
+
 		const idleActions = ["neutral_idle", "happy_idle"];
-		const slowDanceMoves = ["chicken"];
-		const bigDanceMoves = ["gangnam_style"];
+		const slowDanceMoves = ["chicken", "hiphop"];
+		const bigDanceMoves = ["gangnam_style", "shuffling"];
 
 		idleActions.forEach((key) => {
 			gsap.to(animationActions[key], {
@@ -266,13 +269,17 @@ function autoAnimateBaseOnWaveForm() {
 
 		// Crossfade to slow dance moves
 		if (targetAnimation === "slow_dance") {
-			slowDanceMoves.forEach((key) => {
-				gsap.to(animationActions[key], {
-					weight: 1,
-					duration: 2,
-					ease: "power2.inOut",
-				});
+			gsap.to(animationActions[slowDanceMoves[0]], {
+				weight: isRandOver50 ? 0.9 : 0.1,
+				duration: 2,
+				ease: "power2.inOut",
 			});
+			gsap.to(animationActions[slowDanceMoves[1]], {
+				weight: isRandOver50 ? 0.1 : 0.9,
+				duration: 2,
+				ease: "power2.inOut",
+			});
+
 			bigDanceMoves.forEach((key) => {
 				gsap.to(animationActions[key], {
 					weight: 0,
@@ -284,13 +291,17 @@ function autoAnimateBaseOnWaveForm() {
 
 		// Crossfade to big dance moves
 		if (targetAnimation === "big_dance") {
-			bigDanceMoves.forEach((key) => {
-				gsap.to(animationActions[key], {
-					weight: 1,
-					duration: 0.5,
-					ease: "power2.inOut",
-				});
+			gsap.to(animationActions[bigDanceMoves[0]], {
+				weight: isRandOver50 ? 0.9 : 0.1,
+				duration: 0.5,
+				ease: "power2.inOut",
 			});
+			gsap.to(animationActions[bigDanceMoves[1]], {
+				weight: isRandOver50 ? 0.1 : 0.9,
+				duration: 0.5,
+				ease: "power2.inOut",
+			});
+
 			slowDanceMoves.forEach((key) => {
 				gsap.to(animationActions[key], {
 					weight: 0,
@@ -437,13 +448,5 @@ export const AUDIO_VIS_SCENE = CreateModule({
 		store.elapsedTime = ctx.clock.getElapsedTime();
 		autoAnimateBaseOnWaveForm();
 		updateAudioReactiveLighting();
-	},
-	onDestroy: () => {
-		// Clean up GUI when scene is destroyed
-		if (gui) {
-			gui.destroy();
-			gui = null;
-		}
-		guiControllers = {};
 	},
 });
