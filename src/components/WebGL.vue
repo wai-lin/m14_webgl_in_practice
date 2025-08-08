@@ -1,11 +1,5 @@
 <script setup lang="ts">
 import { EventsManager } from "@lib/Events";
-import {
-	CameraHelperPlugin,
-	DebugToolsPlugin,
-	StatsPlugin,
-	WindowResizePlugin,
-} from "@lib/Plugins";
 import { NewProgram } from "@lib/Program";
 import { useTemplateRef, watch } from "vue";
 
@@ -25,16 +19,6 @@ watch(canvasElement, (canvasElement) => {
 	/// Create a new WebGL program
 	const p = NewProgram(canvasElement, "post-processor");
 
-	/***** Plugins *****/
-	p.use(
-		/** Debuggers **/
-		StatsPlugin,
-		DebugToolsPlugin,
-		CameraHelperPlugin,
-		/** Helpers **/
-		WindowResizePlugin,
-	);
-
 	/***** Modules *****/
 	p.use(...props.modules);
 
@@ -44,5 +28,4 @@ watch(canvasElement, (canvasElement) => {
 
 <template>
 	<canvas ref="webgl-canvas"></canvas>
-	<slot />
 </template>

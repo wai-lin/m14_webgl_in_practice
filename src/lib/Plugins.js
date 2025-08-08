@@ -44,27 +44,34 @@ export const StatsPlugin = CreateModule({
 });
 
 /**
- * DebugToolsPlugin provides basic debugging tools.
- *
- * - `OrbitControls` for camera manipulation.
- * - `AxesHelper` for visualizing axes.
- *
- * You can access the `OrbitControls` instance via `ctx.get("OrbitControls")`.
+ * OrbitControlsPlugin provides orbit controls for the camera.
  */
-export const DebugToolsPlugin = CreateModule({
-	name: "DebugToolsPlugin",
+export const OrbitControlsPlugin = CreateModule({
+	name: "OrbitControlsPlugin",
 	onInit: (ctx) => {
 		const camera = ctx.scene.getObjectByName("MainCamera");
 		const orbitControls = new OrbitControls(camera, ctx.webgl.domElement);
 		orbitControls.enabled = STORE.debug.enabled;
 		ctx.provide("OrbitControls", orbitControls);
 
+		subscribe(STORE.debug, () => {
+			orbitControls.enabled = STORE.debug.enabled;
+		});
+	},
+});
+
+/**
+ * AxesHelperPlugin adds an axes helper to visualize the scene axes.
+ */
+export const AxesHelperPlugin = CreateModule({
+	name: "AxesHelperPlugin",
+	onInit: (ctx) => {
 		const axesHelper = new THREE.AxesHelper(100);
+		axesHelper.name = "AxesHelper";
 		axesHelper.visible = STORE.debug.enabled;
 		ctx.scene.add(axesHelper);
 
 		subscribe(STORE.debug, () => {
-			orbitControls.enabled = STORE.debug.enabled;
 			axesHelper.visible = STORE.debug.enabled;
 		});
 	},
