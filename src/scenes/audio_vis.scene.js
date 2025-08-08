@@ -44,7 +44,7 @@ resources.queueResources(
 	{
 		name: "galaxy",
 		type: "texture",
-		url: "/dance/galaxy_opt.jpg",
+		url: "/dance/textures/galaxy_opt.jpg",
 	},
 	{
 		name: "soldier",
