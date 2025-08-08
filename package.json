@@ -5,8 +5,21 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "vue-tsc -b && vite build",
     "preview": "vite preview"
+  },
+  "prettier": {
+    "singleQuote": false,
+    "semi": true,
+    "trailingComma": "all",
+    "useTabs": true,
+    "bracketSpacing": true,
+    "arrowParens": "always",
+    "endOfLine": "lf",
+    "plugins": [
+      "prettier-plugin-organize-imports",
+      "prettier-plugin-tailwindcss"
+    ]
   },
   "dependencies": {
     "@use-gesture/vanilla": "^10.3.1",
@@ -14,20 +27,26 @@
     "lil-gui": "^0.20.0",
     "maath": "^0.10.8",
     "mitt": "^3.0.1",
-    "postprocessing": "^6.37.6",
+    "postprocessing": "^6.37.7",
     "stats.js": "^0.17.0",
-    "three": "^0.178.0",
-    "valtio": "^2.1.5"
+    "three": "^0.179.1",
+    "valtio": "^2.1.5",
+    "vue": "^3.5.13"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.1.11",
     "@types/node": "^24.1.0",
     "@types/stats.js": "^0.17.4",
     "@types/three": "^0.178.1",
+    "@vitejs/plugin-vue": "^5.2.1",
+    "@vue/tsconfig": "^0.7.0",
     "daisyui": "^5.0.50",
+    "prettier-plugin-organize-imports": "^4.2.0",
+    "prettier-plugin-tailwindcss": "^0.6.14",
     "tailwindcss": "^4.1.11",
     "typescript": "~5.7.2",
     "vite": "^6.1.0",
-    "vite-plugin-glsl": "^1.5.1"
+    "vite-plugin-glsl": "^1.5.1",
+    "vue-tsc": "^2.2.0"
   }
 }

@@ -23,8 +23,5 @@ dist-ssr
 *.sln
 *.sw?
 
-# MacOS
-.DS_Store
-
 # Temporary files
 _tmp/

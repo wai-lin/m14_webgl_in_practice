@@ -81,7 +81,7 @@ export const CAR_KIT_SCENE = CreateModule({
     await resourceLoader.loadResources();
   },
   onInit: (ctx) => {
-    createCarKitUI();
+    // createCarKitUI();
 
     const bgColor = CONSTANTS.bgColor[STATE.colorTheme.value];
 
@@ -142,7 +142,7 @@ export const CAR_KIT_SCENE = CreateModule({
     spotLight.target.position.set(0, 0, 0);
     spotLight.intensity = 120;
     spotLight.angle = Math.PI / 6;
-    spotLight.penumbra = 0.1;
+    spotLight.penumbra = 0.01;
     spotLight.decay = 2;
     spotLight.distance = 200;
     // Configure shadow properties

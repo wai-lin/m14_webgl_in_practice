@@ -1,0 +1,27 @@
+{
+  "extends": "@vue/tsconfig/tsconfig.dom.json",
+  "compilerOptions": {
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
+
+    /* Linting */
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedSideEffectImports": true,
+
+    "allowJs": true,
+    "baseUrl": ".",
+    "paths": {
+      "@components/*": ["src/components/*"],
+      "@composables/*": ["src/composables/*"],
+      "@glsl/*": ["src/glsl/*"],
+      "@lib/*": ["src/lib/*"],
+      "@post_processors/*": ["src/post_processors/*"],
+      "@scenes/*": ["src/scenes/*"],
+      "@store/*": ["src/store/*"],
+      "@/*": ["src/*"]
+    }
+  },
+  "include": ["src/**/*.js", "src/**/*.ts", "src/**/*.tsx", "src/**/*.vue"]
+}
