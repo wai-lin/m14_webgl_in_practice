@@ -1,6 +1,7 @@
 import { proxy } from "valtio/vanilla";
 
 export const audioVisStore = proxy({
+	danceThreshold: { value: 0.05 },
 	applicationState: { value: "idle" }, // "idle", "dance"
 	audioPlayerStatus: { value: "stopped" }, // "playing", "paused", "stopped"
 	elapsedTime: 0, // Time delta for clock updates
